@@ -1,0 +1,88 @@
+
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+
+public class Main {
+    public static void main(String[] args) 	{
+        try {
+            ServerSocket s = new ServerSocket(9999);
+            String str;
+            String r1,r2,r3,retorna= "", resp2="";
+            int g1=0,g2=0,guard=0;
+            int soma=0 ;
+
+            while (true) {
+                Socket c = s.accept();
+                InputStream i = c.getInputStream();//recebe
+                OutputStream o = c.getOutputStream();// envia
+                do {
+                    byte[] line = new byte[100];
+                    i.read(line);
+                    //o.write(line);
+
+                    byte[] line1 = new byte[100];
+                    i.read(line1);
+
+                    byte[] line2 = new byte[100];
+                    i.read(line2);
+
+                     r1= new String(line);
+                     r2 = new String(line1);
+                     r3= new String(line2);
+
+
+
+
+                            g1 = Integer.valueOf(r1.trim());
+                            g2 = Integer.valueOf(r3.trim());
+
+
+                           if (r2.trim().equals("+") && !r1.trim().equals("+") && !r3.trim().equals("+")) {
+
+                               g1 += g2;
+                               retorna = String.valueOf(g1);
+                           }
+
+                           if (r2.trim().equals("-") && !r1.trim().equals("-") && !r3.trim().equals("-")) {
+
+                               g1 -= g2;
+                               retorna = String.valueOf(g1);
+
+                           }
+
+                           if (r2.trim().equals("*") && !r1.trim().equals("*") && !r3.trim().equals("*")) {
+
+                               g1 *= g2;
+                               retorna = String.valueOf(g1);
+
+                           }
+                           if (r2.trim().equals("/") && !r1.trim().equals("/") && !r3.trim().equals("/")) {
+
+                               g1 /= g2;
+                               retorna = String.valueOf(g1);
+
+                           }
+
+                           if(!r2.trim().equals("+") & !r2.trim().equals("-") & !r2.trim().equals("*") & !r2.trim().equals("/") ){
+                               g1 = 0;
+                                resp2="invalido";
+                               retorna = String.valueOf(resp2); //  siginifica invalido ;
+
+                           }
+
+
+                    o.write(retorna.trim().getBytes());
+                    str = new String(retorna);
+
+                } while ( !str.trim().equals("bye") );
+                c.close();
+            }
+        }
+        catch (Exception err){
+            System.err.println(err);
+        }
+    }
+}
